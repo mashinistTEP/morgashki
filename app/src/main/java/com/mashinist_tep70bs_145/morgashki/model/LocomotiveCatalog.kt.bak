@@ -88,7 +88,7 @@ object LocomotiveCatalog {
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.chs4t_bufer_l, LayerRect(72.622663f, 62.605110f, 4.908724f))
+                        LayerAsset(R.drawable.chs4t_bufer_l, LayerRect(72.622663f, 62.605110f, 4.908724f)
                     )
                 ),
                 ToggleButton(
