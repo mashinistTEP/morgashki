@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Моргашки</string>
+    <string name="choose_locomotive">Выберите локомотив:</string>
+    <string name="group_bch">Беларуская Чыгунка</string>
+    <string name="group_rzd">Российские железные дороги</string>
+    <string name="on_route">на маршруте</string>
+    <string name="back_to_list">К поездам</string>
+    <string name="btn_bufer_l">буфер л.</string>
+    <string name="btn_bufer_r">буфер пр.</string>
+    <string name="btn_red_bufer_l">кр. буфер л.</string>
+    <string name="btn_red_bufer_r">кр. буфер пр.</string>
+    <string name="btn_projector">прожектор</string>
+</resources>

@@ -1,0 +1,23 @@
+<resources>
+    <color name="bg_root">#101216</color>
+    <color name="bg_surface">#181B21</color>
+    <color name="bg_surface_alt">#20242C</color>
+    <color name="bg_card">#1D2129</color>
+    <color name="stroke_subtle">#2A2F39</color>
+
+    <color name="text_primary">#F0F1F4</color>
+    <color name="text_secondary">#9AA3B2</color>
+    <color name="text_disabled">#5B6270</color>
+
+    <color name="accent">#3D7FFF</color>
+    <color name="accent_on">#FFC94A</color>
+    <color name="accent_red">#E3473A</color>
+
+    <color name="btn_off_bg">#252A33</color>
+    <color name="btn_off_border">#363C48</color>
+    <color name="btn_on_bg">#3D7FFF</color>
+    <color name="btn_on_fill">#1E2A42</color>
+
+    <color name="disabled_chip_bg">#1A1C21</color>
+    <color name="disabled_chip_text">#565C68</color>
+</resources>
