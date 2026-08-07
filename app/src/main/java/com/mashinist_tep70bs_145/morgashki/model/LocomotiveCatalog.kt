@@ -88,14 +88,14 @@ object LocomotiveCatalog {
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.chs4t_bufer_l, LayerRect(78.893443f, 62.602112f, 4.893141f))
+                        LayerAsset(R.drawable.chs4t_bufer_l, LayerRect(72.622663f, 62.605110f, 4.908724f)
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_l",
                     labelRes = R.string.btn_red_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.chs4t_red_bufer_l, LayerRect(72.622663f, 62.605110f, 4.908724f))
+                        LayerAsset(R.drawable.chs4t_red_bufer_l, LayerRect(78.893443f, 62.602112f, 4.893141f))
                     )
                 ),
                 ToggleButton(
@@ -133,14 +133,14 @@ object LocomotiveCatalog {
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.tep70_bufer_l, LayerRect(70.373717f, 59.315410f, 6.352424f))
+                        LayerAsset(R.drawable.tep70_bufer_l, LayerRect(62.108643f, 59.255331f, 6.419886f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_l",
                     labelRes = R.string.btn_red_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.tep70_red_bufer_l, LayerRect(62.108643f, 59.255331f, 6.419886f))
+                        LayerAsset(R.drawable.tep70_red_bufer_l, LayerRect(70.373717f, 59.315410f, 6.352424f))
                     )
                 ),
                 ToggleButton(
@@ -229,6 +229,52 @@ object LocomotiveCatalog {
 
         // ---------------- РЖД ----------------
 
+        Locomotive(
+            code = "ep2k",
+            displayName = "ЭП2К-220",
+            fonRes = R.drawable.ep2k_fon,
+            fonAspectRatio = 864f / 1226f,
+            group = RailwayGroup.RZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep2k_bufer_r, LayerRect(33.454641015245386f, 
+63.935370896313444f, 7.686396714261276f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep2k_red_bufer_r, LayerRect(26.2069336480488f, 64.4973057412749f, 6.435249359318719f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep2k_bufer_l, LayerRect(65.36832302868848f, 64.20376438813825f, 7.738650300660359f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep2k_red_bufer_l, LayerRect(74.08982528492652f, 64.91480069689955f, 6.160153289361195f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep2k_projector, LayerRect(47.35706508970985f,15.819854692183275f, 11.687893747258867f))
+                    )
+                )
+            )
+        ),
+        
         Locomotive(
             code = "es1p",
             displayName = "ЭС1П-013",

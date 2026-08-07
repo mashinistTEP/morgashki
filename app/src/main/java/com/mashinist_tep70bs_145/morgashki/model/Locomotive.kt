@@ -35,7 +35,7 @@ data class ToggleButton(
 data class Locomotive(
     val code: String,             // короткий код, напр. "bkg1"
     val displayName: String,      // "БКГ1-010"
-    val ownName: String? = null,  // "АЛЕКСАНДР ЛАДУТЬКО" (собственное имя, если есть)
+    val ownName: String? = null,  //собственное имя, если есть
     val fonRes: Int? = null,      // ресурс картинки фона; null если фона ещё нет
     val fonAspectRatio: Float = 0.75f, // width/height картинки фона, для расчёта разметки без загрузки
     val buttons: List<ToggleButton> = emptyList(),
