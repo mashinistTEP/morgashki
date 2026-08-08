@@ -233,7 +233,7 @@ object LocomotiveCatalog {
             code = "ep2k",
             displayName = "ЭП2К-220",
             fonRes = R.drawable.ep2k_fon,
-            fonAspectRatio = 864f / 1226f,
+            fonAspectRatio = 896f / 1167f,
             group = RailwayGroup.RZD,
             buttons = listOf(
                 ToggleButton(
@@ -302,6 +302,96 @@ object LocomotiveCatalog {
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
                         LayerAsset(R.drawable.es1p_bufer_l, LayerRect(73.856270f, 59.195549f, 4.924065f))
+                    )
+                )
+            )
+        ),
+
+        Locomotive(
+            code = "ep1m",
+            displayName = "ЭП1М-397",
+            fonRes = R.drawable.ep1m_fon,
+            fonAspectRatio = 848f / 1231f,
+            group = RailwayGroup.RZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep1m_bufer_r, LayerRect(17.918476f, 54.573470f, 7.353889f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep1m_bufer_l, LayerRect(75.071981f, 54.603803f, 25.640024f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep1m_red_bufer_r, LayerRect(17.792507f, 49.519848f, 5.748347f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep1m_red_bufer_l, LayerRect(76.740231f, 49.676243f, 5.709062f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.ep1m_projector, LayerRect(43.120530f, 9.213673f, 13.929675f))
+                    )
+                )
+            )
+        ),
+
+        Locomotive(
+            code = "chs4t_313_rzd",
+            displayName = "ЧС4т-313",
+            fonRes = R.drawable.chs4t_313_rzd_fon,
+            fonAspectRatio = 1171f / 1343f,
+            group = RailwayGroup.RZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.chs4t_313_rzd_bufer_r, LayerRect(22.935969f, 64.016315f, 4.029003f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.chs4t_313_rzd_bufer_l, LayerRect(73.214967f, 63.852833f, 4.023163f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.chs4t_313_rzd_red_bufer_r, LayerRect(19.029665f, 64.080951f, 3.999926f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.chs4t_313_rzd_red_bufer_l, LayerRect(76.959749f, 63.713409f, 3.995651f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.chs4t_313_rzd_projector, LayerRect(46.375658f, 13.132028f, 7.479308f))
                     )
                 )
             )
