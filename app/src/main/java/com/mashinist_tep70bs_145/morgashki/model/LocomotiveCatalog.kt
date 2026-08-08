@@ -277,7 +277,7 @@ object LocomotiveCatalog {
         Locomotive(
             code = "chs4t_rzd",
             displayName = "ЧС4т-313",
-            fonRes = R.drawable.chs4t_rzd_313_fon,
+            fonRes = R.drawable.chs4t_313_rzd_fon,
             fonAspectRatio = 1212f / 1298f,
             group = RailwayGroup.RZD,
             onRoute = true
