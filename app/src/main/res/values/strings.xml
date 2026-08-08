@@ -12,6 +12,6 @@
     <string name="btn_projector">прожектор</string>
     <string name="line_kld_zd">Калининградская железная дорога</string>
     <string name="line_mzd">Московская железная дорога</string>
-name="telegram_channel_label">mashinist_TEP70BS_145</string>
+    <string name="telegram_channel_label">mashinist_TEP70BS_145</string>
     <string name="telegram_channel_arrow">→</string>
 </resources>
