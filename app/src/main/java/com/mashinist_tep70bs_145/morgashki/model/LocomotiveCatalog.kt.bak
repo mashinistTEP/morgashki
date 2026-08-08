@@ -240,28 +240,28 @@ object LocomotiveCatalog {
                     id = "bufer_r",
                     labelRes = R.string.btn_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.ep2k_bufer_r, LayerRect(22.7762364975204f, 62.55810153377395f, 4.881735536318989f))
+                        LayerAsset(R.drawable.ep2k_bufer_r, LayerRect(33.454641015245386f, 63.935370896313444f, 7.686396714261276f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_r",
                     labelRes = R.string.btn_red_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.ep2k_red_bufer_r, LayerRect(16.56149417705038f, 62.55284743400804f, 4.872909266889965f))
+                        LayerAsset(R.drawable.ep2k_red_bufer_r, LayerRect(26.20693364804883f, 64.4973057412749f, 6.435249359318719f))
                     )
                 ),
                 ToggleButton(
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.ep2k_bufer_l, LayerRect(78.89344399147603f, 62.60211238739051f, 4.893141268424499f))
+                        LayerAsset(R.drawable.ep2k_bufer_l, LayerRect(65.36832302868848f, 64.20376438813825f, 7.738650300660359f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_l",
                     labelRes = R.string.btn_red_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.ep2k_red_bufer_l, LayerRect(72.62266379190073f, 62.60511093645423f, 4.90872493446377f))
+                        LayerAsset(R.drawable.ep2k_red_bufer_l, LayerRect(74.08982528492652f, 64.91480069689955f, 6.160153289361195f))
                     )
                 ),
                 ToggleButton(
@@ -277,7 +277,7 @@ object LocomotiveCatalog {
         Locomotive(
             code = "chs4t_rzd",
             displayName = "ЧС4т-313",
-            fonRes = R.drawable.chs4t_rzd_fon,
+            fonRes = R.drawable.chs4t_313_rzd_fon,
             fonAspectRatio = 1212f / 1298f,
             group = RailwayGroup.RZD,
             onRoute = true
