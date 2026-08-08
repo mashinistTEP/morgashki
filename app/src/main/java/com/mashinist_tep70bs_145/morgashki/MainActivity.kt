@@ -1,7 +1,9 @@
 package com.mashinist_tep70bs_145.morgashki
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,6 +15,10 @@ import com.mashinist_tep70bs_145.morgashki.ui.ListRow
 import com.mashinist_tep70bs_145.morgashki.ui.LocomotiveListAdapter
 
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        private const val TELEGRAM_CHANNEL_URL = "https://t.me/mashinist_TEP70BS_145_morgashki"
+    }
 
     private lateinit var recyclerView: RecyclerView
 
@@ -26,6 +32,11 @@ class MainActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+
+        findViewById<View>(R.id.telegramBanner).setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(TELEGRAM_CHANNEL_URL))
+            startActivity(intent)
+        }
 
         refreshList()
     }

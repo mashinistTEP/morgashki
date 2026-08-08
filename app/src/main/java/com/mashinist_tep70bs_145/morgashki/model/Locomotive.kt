@@ -55,7 +55,8 @@ enum class RailwayGroup(val titleRes: Int) {
  * используется чтобы показывать кнопку дороги только в нужной группе.
  */
 enum class RailwayLine(val titleRes: Int, val parentGroup: RailwayGroup) {
-    KLD_ZD(com.mashinist_tep70bs_145.morgashki.R.string.line_kld_zd, RailwayGroup.RZD)
+    KLD_ZD(com.mashinist_tep70bs_145.morgashki.R.string.line_kld_zd, RailwayGroup.RZD),
+    MZD(com.mashinist_tep70bs_145.morgashki.R.string.line_mzd, RailwayGroup.RZD),
     // Заполняется скриптом add_railway_line.py, либо вручную по образцу:
     // OCT(com.mashinist_tep70bs_145.morgashki.R.string.line_oct, RailwayGroup.RZD),
 }

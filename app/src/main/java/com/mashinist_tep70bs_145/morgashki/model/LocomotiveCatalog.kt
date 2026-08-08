@@ -559,6 +559,98 @@ object LocomotiveCatalog {
                     )
                 )
             )
+        ),
+
+        Locomotive(
+            code = "tgm4a_1687",
+            displayName = "ТГМ4а-1687",
+            fonRes = R.drawable.tgm4a_1687_fon,
+            fonAspectRatio = 672f / 768f,
+            group = RailwayGroup.RZD,
+            line = RailwayLine.MZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4a_1687_bufer_r, LayerRect(23.757604f, 64.382311f, 7.656970f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4a_1687_bufer_l, LayerRect(71.138538f, 64.319048f, 7.767400f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4a_1687_red_bufer_r, LayerRect(29.598652f, 64.007735f, 7.000071f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4a_1687_red_bufer_l, LayerRect(66.224851f, 64.437840f, 6.829667f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4a_1687_projector, LayerRect(46.845323f, 12.410522f, 8.942812f))
+                    )
+                )
+            )
+        ),
+
+        Locomotive(
+            code = "tgm4b_0824",
+            displayName = "ТГМ4б-0824",
+            fonRes = R.drawable.tgm4b_0824_fon,
+            fonAspectRatio = 665f / 768f,
+            group = RailwayGroup.RZD,
+            line = RailwayLine.MZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4b_0824_bufer_r, LayerRect(23.826397f, 69.785288f, 6.217042f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4b_0824_bufer_l, LayerRect(71.594708f, 69.912955f, 5.999337f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4b_0824_red_bufer_r, LayerRect(24.136787f, 64.947555f, 5.333777f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4b_0824_red_bufer_l, LayerRect(71.440210f, 64.785828f, 5.902509f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.tgm4b_0824_projector, LayerRect(45.607451f, 14.025497f, 10.000000f))
+                    )
+                )
+            )
         )
     )
 
