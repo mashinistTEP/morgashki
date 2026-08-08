@@ -54,11 +54,10 @@ class LocomotiveActivity : AppCompatActivity() {
     }
 
     private fun setupFon() {
-    val fonRes = locomotive.fonRes
-
-    if (fonRes != null) {
-        imgFon.setImageResource(fonRes)
-    }
+        val fonRes = locomotive.fonRes
+        if (fonRes != null) {
+            imgFon.setImageResource(fonRes)
+        }
 
         // Ограничиваем ширину fonHolder так, чтобы соотношение сторон
         // соответствовало исходному фону (аналог aspectRatio в ConstraintLayout,
