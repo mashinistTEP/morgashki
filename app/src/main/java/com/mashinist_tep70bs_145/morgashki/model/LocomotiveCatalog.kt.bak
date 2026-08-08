@@ -517,7 +517,7 @@ object LocomotiveCatalog {
         Locomotive(
             code = "er2k_428",
             displayName = "ЭР2К-428",
-            ownName = "Голубая Стрела",
+            ownName = "ГОЛУБАЯ СТРЕЛА",
             fonRes = R.drawable.er2k_428_fon,
             fonAspectRatio = 612f / 766f,
             group = RailwayGroup.RZD,

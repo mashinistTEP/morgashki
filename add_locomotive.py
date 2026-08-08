@@ -31,6 +31,7 @@ import sys
 # ---------- Настройки путей (относительно корня проекта) ----------
 
 CATALOG_PATH = "app/src/main/java/com/mashinist_tep70bs_145/morgashki/model/LocomotiveCatalog.kt"
+LOCOMOTIVE_KT_PATH = "app/src/main/java/com/mashinist_tep70bs_145/morgashki/model/Locomotive.kt"
 DRAWABLE_DIR = "app/src/main/res/drawable-nodpi"
 
 
@@ -72,6 +73,51 @@ def ask_multiline_json(prompt):
         lines.append(line)
     raw = "\n".join(lines)
     return raw
+
+
+# ---------- Чтение доступных групп/дорог из Locomotive.kt ----------
+
+def find_available_groups(kt_text):
+    """Возвращает список (код, string_res_name) констант enum RailwayGroup."""
+    marker = "enum class RailwayGroup(val titleRes: Int) {"
+    start_idx = kt_text.find(marker)
+    if start_idx == -1:
+        return []
+    body_start = start_idx + len(marker)
+    end_idx = kt_text.find("}", body_start)
+    body = kt_text[body_start:end_idx]
+    pattern = re.compile(r"(\w+)\(com\.mashinist_tep70bs_145\.morgashki\.R\.string\.(\w+)\)")
+    return pattern.findall(body)
+
+
+def find_available_lines(kt_text):
+    """Возвращает список (код, string_res_name, parent_group_code) констант enum RailwayLine."""
+    marker = "enum class RailwayLine(val titleRes: Int, val parentGroup: RailwayGroup) {"
+    start_idx = kt_text.find(marker)
+    if start_idx == -1:
+        return []
+    body_start = start_idx + len(marker)
+    end_idx = kt_text.find("}", body_start)
+    body = kt_text[body_start:end_idx]
+    body_without_comments = "\n".join(
+        line for line in body.split("\n") if not line.strip().startswith("//")
+    )
+    pattern = re.compile(
+        r"(\w+)\(com\.mashinist_tep70bs_145\.morgashki\.R\.string\.(\w+),\s*RailwayGroup\.(\w+)\)"
+    )
+    return pattern.findall(body_without_comments)
+
+
+def resolve_titles(codes_with_res, strings_xml_text):
+    """codes_with_res: список (код, string_res_name[, ...]) -> список (код, человекочитаемое название)"""
+    result = []
+    for entry in codes_with_res:
+        code, res_name = entry[0], entry[1]
+        rest = entry[2:]
+        m = re.search(rf'name="{re.escape(res_name)}">([^<]*)<', strings_xml_text)
+        title = m.group(1) if m else res_name
+        result.append((code, title) + rest)
+    return result
 
 
 # ---------- Разбор PNG без внешних библиотек ----------
@@ -156,7 +202,7 @@ def build_toggle_button(button_id, label_res, drawable_layers, indent="         
 
 def build_locomotive_block(code, display_name, own_name, group_const,
                             has_fon, fon_aspect_ratio,
-                            buttons_data, on_route=False):
+                            buttons_data, on_route=False, line_const=None):
     """
     buttons_data: список кортежей (button_id, label_res, [(drawable_name, layer), ...])
     в нужном порядке вывода.
@@ -173,6 +219,8 @@ def build_locomotive_block(code, display_name, own_name, group_const,
     else:
         lines.append(f"{indent}    fonRes = null,")
     lines.append(f"{indent}    group = RailwayGroup.{group_const},")
+    if line_const:
+        lines.append(f"{indent}    line = RailwayLine.{line_const},")
     if on_route:
         lines.append(f"{indent}    onRoute = true,")
 
@@ -356,6 +404,18 @@ def main():
         print(f"ОШИБКА: не нашёл {CATALOG_PATH}")
         print("Запусти скрипт из корня проекта (там, где лежит build.gradle.kts).")
         sys.exit(1)
+    if not os.path.isfile(LOCOMOTIVE_KT_PATH):
+        print(f"ОШИБКА: не нашёл {LOCOMOTIVE_KT_PATH}")
+        sys.exit(1)
+
+    with open(LOCOMOTIVE_KT_PATH, "r", encoding="utf-8") as f:
+        locomotive_kt_text = f.read()
+
+    strings_xml_path = "app/src/main/res/values/strings.xml"
+    strings_xml_text = ""
+    if os.path.isfile(strings_xml_path):
+        with open(strings_xml_path, "r", encoding="utf-8") as f:
+            strings_xml_text = f.read()
 
     display_name = ask("Название локомотива (например «ЭП2К-220»)")
     code = ask("Короткий код (латиницей, для имён файлов, например «ep2k»)").lower()
@@ -370,8 +430,45 @@ def main():
         own_name = ask("Введи собственное имя (например «ЕВГЕНИЙ ВОЛОДЬКО»)").upper()
 
     print()
-    group_choice = ask("Группа — БЧ или РЖД? (введи bch/rzd)", default="bch").lower()
-    group_const = "RZD" if group_choice in ("rzd", "ржд") else "BCH"
+    groups_raw = find_available_groups(locomotive_kt_text)
+    if not groups_raw:
+        print("ОШИБКА: не нашёл ни одной компании (RailwayGroup) в Locomotive.kt.")
+        print("Сначала добавь компанию через add_railway_group.py.")
+        sys.exit(1)
+    groups = resolve_titles(groups_raw, strings_xml_text)
+
+    print("Доступные компании-перевозчики:")
+    for i, (gcode, gtitle) in enumerate(groups, 1):
+        print(f"  {i}) {gcode} — {gtitle}")
+
+    while True:
+        choice = ask("Выбери номер компании", default="1")
+        if choice.isdigit() and 1 <= int(choice) <= len(groups):
+            group_const = groups[int(choice) - 1][0]
+            break
+        print("  Введи номер из списка выше.")
+
+    # ---------- дорога (подгруппа) внутри выбранной компании, если есть ----------
+    line_const = None
+    lines_raw = find_available_lines(locomotive_kt_text)
+    lines_for_group = [entry for entry in lines_raw if entry[2] == group_const]
+    if lines_for_group:
+        lines_titled = resolve_titles(lines_for_group, strings_xml_text)
+        print()
+        print(f"У компании {group_const} есть дороги (подгруппы):")
+        print("  0) — без конкретной дороги (общий состав компании)")
+        for i, entry in enumerate(lines_titled, 1):
+            lcode, ltitle = entry[0], entry[1]
+            print(f"  {i}) {lcode} — {ltitle}")
+        while True:
+            choice = ask("Выбери номер дороги", default="0")
+            if choice == "0":
+                line_const = None
+                break
+            if choice.isdigit() and 1 <= int(choice) <= len(lines_titled):
+                line_const = lines_titled[int(choice) - 1][0]
+                break
+            print("  Введи номер из списка выше.")
 
     print()
     on_route = ask_yes_no("Поставить локомотив «на маршруте» (недоступен для выбора)?", default_yes=False)
@@ -457,6 +554,7 @@ def main():
         fon_aspect_ratio=fon_aspect_ratio,
         buttons_data=buttons_data,
         on_route=on_route,
+        line_const=line_const,
     )
 
     print()

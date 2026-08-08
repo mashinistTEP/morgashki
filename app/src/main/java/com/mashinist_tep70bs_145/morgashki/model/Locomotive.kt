@@ -40,10 +40,22 @@ data class Locomotive(
     val fonAspectRatio: Float = 0.75f, // width/height картинки фона, для расчёта разметки без загрузки
     val buttons: List<ToggleButton> = emptyList(),
     val onRoute: Boolean = false, // "на маршруте" — недоступен для выбора
-    val group: RailwayGroup
+    val group: RailwayGroup,
+    val line: RailwayLine? = null // конкретная дорога внутри компании (МЖД, ОКТ.ЖД...); null = общий состав группы
 )
 
 enum class RailwayGroup(val titleRes: Int) {
     BCH(com.mashinist_tep70bs_145.morgashki.R.string.group_bch),
     RZD(com.mashinist_tep70bs_145.morgashki.R.string.group_rzd)
+}
+
+/**
+ * Конкретная дорога (подгруппа) внутри компании-перевозчика, например
+ * МЖД или ОКТ.ЖД внутри РЖД. parentGroup — к какой компании относится,
+ * используется чтобы показывать кнопку дороги только в нужной группе.
+ */
+enum class RailwayLine(val titleRes: Int, val parentGroup: RailwayGroup) {
+    KLD_ZD(com.mashinist_tep70bs_145.morgashki.R.string.line_kld_zd, RailwayGroup.RZD)
+    // Заполняется скриптом add_railway_line.py, либо вручную по образцу:
+    // OCT(com.mashinist_tep70bs_145.morgashki.R.string.line_oct, RailwayGroup.RZD),
 }
