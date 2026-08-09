@@ -564,7 +564,7 @@ object LocomotiveCatalog {
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
                 maxTextWidthPct = 29f,
-                maxChars = 12,
+                maxChars = 17,
                 presetRoutes = listOf("Светлогорск", "Калининград-Юж.")
             )
         ),
