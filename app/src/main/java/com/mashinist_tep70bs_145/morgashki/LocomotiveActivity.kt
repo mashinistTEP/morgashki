@@ -206,8 +206,9 @@ class LocomotiveActivity : AppCompatActivity() {
             emuBoardEnabled = !emuBoardEnabled
             emuBtn.isChecked = emuBoardEnabled
             if (!emuBoardEnabled) {
-                // при выключении ЭМУ табло гаснет
-                displayBoardView?.setTextAnimated("")
+                // при выключении ЭМУ отменяем текущую запись
+                // и стираем только то, что реально было видно
+                displayBoardView?.clearAnimated()
             }
         }
         emuToggleView = emuBtn
@@ -273,6 +274,8 @@ class LocomotiveActivity : AppCompatActivity() {
                 presetBtn.layoutParams = lp
                 presetBtn.setOnClickListener {
                     input.setText(route)
+                    // Курсор ставим в конец фактически установленного текста.
+                    // Это безопасно даже если LengthFilter ограничит строку.
                     input.setSelection(input.text.length)
                 }
                 presetsRow.addView(presetBtn)
@@ -314,6 +317,7 @@ class LocomotiveActivity : AppCompatActivity() {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
             typeface = emuTypeface
             textSize = board.textSizePx
+            textScaleX = board.textScaleX
         }
         val measuredWidth = paint.measureText(text)
 
@@ -343,8 +347,17 @@ class LocomotiveActivity : AppCompatActivity() {
         val boardView = DisplayBoardView(this).apply {
             typeface = emuTypeface
             textColor = resources.getColor(R.color.display_board_text, theme)
-            textSizePx = heightPx * 0.48f
-            setPadding((widthPx * 0.06f).roundToInt(), 0, 0, 0)
+
+            // Текст ЭМУ ещё меньше: 34% высоты окна.
+            textSizePx = heightPx * 0.34f
+
+            // Делаем символы уже.
+            textScaleX = 0.62f
+
+            // И немного сдвигаем текст вправо.
+            textOffsetX = widthPx * 0.08f
+
+            // Фон НЕ задаём: ЭМУ должен лежать прямо на исходном изображении.
             setTextInstant("") // табло погашено при входе на экран
         }
 

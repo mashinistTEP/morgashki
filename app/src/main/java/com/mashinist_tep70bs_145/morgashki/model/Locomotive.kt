@@ -44,7 +44,7 @@ data class ToggleButton(
 data class DisplayBoard(
     val rect: LayerRect,
     val maxTextWidthPct: Float,
-    val maxChars: Int = 12,
+    val maxChars: Int = 15,
     val presetRoutes: List<String> = emptyList()
 )
 
