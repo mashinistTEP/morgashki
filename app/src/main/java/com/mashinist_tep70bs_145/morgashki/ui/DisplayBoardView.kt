@@ -24,7 +24,7 @@ import android.view.animation.LinearInterpolator
 class DisplayBoardView(context: Context) : View(context) {
 
     companion object {
-        private const val ANIM_DURATION_MS = 650L
+        private const val ANIM_DURATION_MS = 1600L
     }
 
     var typeface: Typeface? = null
