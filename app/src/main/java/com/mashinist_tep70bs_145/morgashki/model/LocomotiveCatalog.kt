@@ -558,6 +558,14 @@ object LocomotiveCatalog {
                         LayerAsset(R.drawable.er2k_428_projector, LayerRect(45.146737f, 13.968323f, 9.016051f))
                     )
                 )
+            ),
+            // Координаты откалиброваны точно по er2k_428_fon.png (612x766):
+            // окно табло x=200..390, y=170..212 px.
+            displayBoard = DisplayBoard(
+                rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
+                maxTextWidthPct = 29f,
+                maxChars = 12,
+                presetRoutes = listOf("Светлогорск", "Калининград-Юж.")
             )
         ),
 

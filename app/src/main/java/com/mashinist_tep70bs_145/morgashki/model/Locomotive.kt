@@ -32,6 +32,22 @@ data class ToggleButton(
     val layers: List<LayerAsset> // один или несколько слоёв, включаемых этой кнопкой
 )
 
+/**
+ * Табло с произвольным текстом (например маршрутный указатель на ЭМУ),
+ * поверх которого можно вписать свою надпись. rect — положение и размер
+ * окна табло на фоне (как у обычных слоёв). maxTextWidthPct — максимальная
+ * ширина текста в процентах ширины фона: если введённый текст в выбранном
+ * шрифте оказывается шире этого предела, ввод не применяется, чтобы текст
+ * не вылезал за рамки табло. presetRoutes — готовые маршруты, показываемые
+ * кнопками в диалоге ввода (специфичны для конкретного МВПС, не глобальные).
+ */
+data class DisplayBoard(
+    val rect: LayerRect,
+    val maxTextWidthPct: Float,
+    val maxChars: Int = 12,
+    val presetRoutes: List<String> = emptyList()
+)
+
 data class Locomotive(
     val code: String,             // короткий код, напр. "bkg1"
     val displayName: String,      // "БКГ1-010"
@@ -41,7 +57,8 @@ data class Locomotive(
     val buttons: List<ToggleButton> = emptyList(),
     val onRoute: Boolean = false, // "на маршруте" — недоступен для выбора
     val group: RailwayGroup,
-    val line: RailwayLine? = null // конкретная дорога внутри компании (МЖД, ОКТ.ЖД...); null = общий состав группы
+    val line: RailwayLine? = null, // конкретная дорога внутри компании (МЖД, ОКТ.ЖД...); null = общий состав группы
+    val displayBoard: DisplayBoard? = null // табло с вводом своего текста; null = у локомотива нет табло
 )
 
 enum class RailwayGroup(val titleRes: Int) {

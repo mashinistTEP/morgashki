@@ -5,18 +5,22 @@ add_locomotive.py — интерактивное добавление новог
 
 Что делает:
   1. Спрашивает название, короткий код, именной ли локомотив (и если да — имя),
-     группу (БЧ/РЖД), блок координат из калибратора (JSON), наличие раздельного
-     прожектора (л./пр.) или одного общего.
+     компанию и (если есть) дорогу внутри неё, блок координат из калибратора
+     (JSON), наличие раздельного прожектора (л./пр.) или одного общего.
   2. Сам вычисляет fonAspectRatio из реального PNG-файла фона (через встроенный
      разбор заголовка PNG — без внешних зависимостей типа Pillow).
   3. Проверяет, что все нужные PNG-файлы (fon, bufer_l/r, red_bufer_l/r,
      projector[_l/_r]) реально лежат в drawable-nodpi — не даёт продолжить,
      если чего-то не хватает.
-  4. Генерирует корректный блок Locomotive(...) и аккуратно вставляет его
+  4. Если у локомотива есть табло с вводом текста (маршрутный указатель на
+     ЭМУ) — спрашивает пиксельные координаты окна табло на фоне, максимальное
+     число символов и список готовых маршрутов (свои для этого МВПС, не
+     хранятся глобально).
+  5. Генерирует корректный блок Locomotive(...) и аккуратно вставляет его
      в LocomotiveCatalog.kt в конец нужной группы (БЧ или РЖД).
-  5. Проверяет баланс скобок файла после вставки — если он нарушен, изменения
+  6. Проверяет баланс скобок файла после вставки — если он нарушен, изменения
      не сохраняются, чтобы не сломать сборку.
-  6. Предлагает сразу закоммитить и запушить весь проект в GitHub.
+  7. Предлагает сразу закоммитить и запушить весь проект в GitHub.
 
 Запуск (из корня проекта android_project_v2):
     python3 add_locomotive.py
@@ -202,10 +206,13 @@ def build_toggle_button(button_id, label_res, drawable_layers, indent="         
 
 def build_locomotive_block(code, display_name, own_name, group_const,
                             has_fon, fon_aspect_ratio,
-                            buttons_data, on_route=False, line_const=None):
+                            buttons_data, on_route=False, line_const=None,
+                            display_board_data=None):
     """
     buttons_data: список кортежей (button_id, label_res, [(drawable_name, layer), ...])
     в нужном порядке вывода.
+    display_board_data: словарь {xPct, yPct, wPct, maxTextWidthPct, maxChars, presetRoutes}
+    или None, если у локомотива нет табло.
     """
     indent = "        "
     lines = [f"{indent}Locomotive("]
@@ -232,10 +239,29 @@ def build_locomotive_block(code, display_name, own_name, group_const,
         ]
         lines.append(f"{indent}    buttons = listOf(")
         lines.append(",\n".join(f"{b}" for b in button_blocks))
-        lines.append(f"{indent}    )")
+        button_close = f"{indent}    )"
+        if display_board_data and not on_route:
+            button_close += ","
+        lines.append(button_close)
+    elif display_board_data and not on_route:
+        # buttons нет, но табло есть — убираем висячую запятую только если
+        # это последнее поле останется без запятой ниже
+        pass
     else:
-        # убираем висячую запятую у group/onRoute, если buttons не добавляем
+        # убираем висячую запятую у group/onRoute, если ни buttons, ни displayBoard не добавляем
         lines[-1] = lines[-1].rstrip(",")
+
+    if display_board_data and not on_route:
+        d = display_board_data
+        presets_kt = ", ".join(f"\"{r}\"" for r in d["presetRoutes"])
+        lines.append(f"{indent}    displayBoard = DisplayBoard(")
+        lines.append(
+            f"{indent}        rect = LayerRect(xPct = {d['xPct']}f, yPct = {d['yPct']}f, wPct = {d['wPct']}f),"
+        )
+        lines.append(f"{indent}        maxTextWidthPct = {d['maxTextWidthPct']}f,")
+        lines.append(f"{indent}        maxChars = {d['maxChars']},")
+        lines.append(f"{indent}        presetRoutes = listOf({presets_kt})")
+        lines.append(f"{indent}    )")
 
     lines.append(f"{indent})")
     return "\n".join(lines)
@@ -478,6 +504,8 @@ def main():
     has_red_buffers = True
     has_projector = False
     projector_separate = False
+    has_display_board = False
+    display_board_data = None
 
     if not on_route:
         has_fon = ask_yes_no("Фон (картинка локомотива) уже готов?", default_yes=True)
@@ -488,6 +516,11 @@ def main():
                 "Прожектор двойной (два отдельных фонаря, включаются одной кнопкой, как у БКГ1)?",
                 default_yes=False
             )
+
+        has_display_board = ask_yes_no(
+            "У локомотива есть табло с вводом текста (маршрутный указатель на ЭМУ)?",
+            default_yes=False
+        )
 
         print()
         required, missing = check_required_files(code, has_red_buffers, has_projector, projector_separate, has_fon)
@@ -510,6 +543,57 @@ def main():
                 sys.exit(1)
             fon_aspect_ratio = (w, h)
             print(f"\nРазмер фона: {w} x {h} px  →  fonAspectRatio = {w}f / {h}f")
+
+        display_board_data = None
+        if has_display_board:
+            if not has_fon or fon_aspect_ratio is None:
+                print("ОШИБКА: для табло нужен готовый фон (чтобы посчитать координаты окна).")
+                sys.exit(1)
+            fon_w, fon_h = fon_aspect_ratio
+            print()
+            print("Координаты окна табло вводятся в пикселях исходного файла фона")
+            print(f"(размер фона: {fon_w} x {fon_h} px). Проще всего определить их,")
+            print("открыв фон в любом просмотрщике с линейкой/координатами курсора,")
+            print("или через скрипт с сеткой (спроси, если нужно).")
+            x1 = int(ask("Левая граница окна табло, x1 (px)"))
+            y1 = int(ask("Верхняя граница окна табло, y1 (px)"))
+            x2 = int(ask("Правая граница окна табло, x2 (px)"))
+            y2 = int(ask("Нижняя граница окна табло, y2 (px)"))
+
+            board_x_pct = x1 / fon_w * 100
+            board_y_pct = y1 / fon_h * 100
+            board_w_pct = (x2 - x1) / fon_w * 100
+            # запас по ширине текста — несколько процентов меньше самого окна,
+            # чтобы текст не упирался вплотную в рамку табло
+            max_text_width_pct = board_w_pct * 0.94
+
+            max_chars = int(ask("Максимальное число символов на табло", default="12"))
+
+            presets = []
+            print("Введи готовые маршруты для кнопок в диалоге ввода (свои для этого МВПС).")
+            print("Оставь пустую строку, чтобы закончить список.")
+            while True:
+                route = input(f"  Маршрут {len(presets) + 1} (или Enter чтобы закончить): ").strip()
+                if not route:
+                    break
+                presets.append(route)
+                if len(presets) >= 2:
+                    more = ask_yes_no("Добавить ещё один маршрут?", default_yes=False)
+                    if not more:
+                        break
+
+            display_board_data = {
+                "xPct": round(board_x_pct, 4),
+                "yPct": round(board_y_pct, 4),
+                "wPct": round(board_w_pct, 4),
+                "maxTextWidthPct": round(max_text_width_pct, 4),
+                "maxChars": max_chars,
+                "presetRoutes": presets,
+            }
+
+            print()
+            print(f"Табло: x={display_board_data['xPct']}% y={display_board_data['yPct']}% "
+                  f"w={display_board_data['wPct']}%, маршруты: {presets}")
 
         print()
         raw_json = ask_multiline_json("Теперь вставь блок координат из калибратора:")
@@ -555,6 +639,7 @@ def main():
         buttons_data=buttons_data,
         on_route=on_route,
         line_const=line_const,
+        display_board_data=display_board_data,
     )
 
     print()

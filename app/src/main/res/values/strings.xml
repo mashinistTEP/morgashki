@@ -13,5 +13,12 @@
     <string name="line_kld_zd">Калининградская железная дорога</string>
     <string name="line_mzd">Московская железная дорога</string>
     <string name="telegram_channel_label">mashinist_TEP70BS_145</string>
-    <string name="telegram_channel_arrow">→</string>
+    <string name="telegram_channel_arrow"></string>
+    <string name="btn_display_board">табло</string>
+    <string name="btn_emu_power">ЭМУ</string>
+    <string name="display_board_dialog_title">Текст на табло</string>
+    <string name="display_board_hint">Введите текст</string>
+    <string name="display_board_apply">Применить</string>
+    <string name="display_board_cancel">Отмена</string>
+    <string name="display_board_too_long">Текст не поместится на табло</string>
 </resources>
