@@ -349,7 +349,7 @@ class LocomotiveActivity : AppCompatActivity() {
             textColor = resources.getColor(R.color.display_board_text, theme)
 
             // Текст ЭМУ ещё меньше: 34% высоты окна.
-            textSizePx = heightPx * 0.34f
+            textSizePx = heightPx * 0.357f
 
             // Делаем символы уже.
             textScaleX = 0.62f
