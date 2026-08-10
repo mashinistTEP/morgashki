@@ -12,19 +12,23 @@ import android.view.animation.LinearInterpolator
 import kotlin.math.roundToInt
 
 /**
- * Табло МВПС с медленной анимацией смены текста "по столбику".
+ * ЭМУ с медленной анимацией смены надписи.
  *
- * Новая надпись появляется медленнее, чем стирается старая.
- * Текущая анимация всегда может быть отменена без мгновенного
- * дописывания целевой строки.
+ * При смене текста:
+ *   1) новая надпись медленно появляется;
+ *   2) затем старая быстрее стирается.
+ *
+ * При выключении ЭМУ используется отдельная анимация стирания:
+ * никакой дополнительной фазы появления нет.
+ *
+ * Если анимация прерывается, новая операция начинается от приблизительно
+ * видимой в этот момент строки, поэтому целевой текст не "дописывается"
+ * мгновенно.
  */
 class DisplayBoardView(context: Context) : View(context) {
 
     companion object {
-        // Появление должно быть особенно медленным.
         private const val REVEAL_DURATION_MS = 3600L
-
-        // Стирание быстрее появления, но всё ещё заметно медленное.
         private const val ERASE_DURATION_MS = 1800L
     }
 
@@ -42,17 +46,7 @@ class DisplayBoardView(context: Context) : View(context) {
             invalidate()
         }
 
-    var textSizePx: Float = 32f
-        set(value) {
-            field = value
-            paint.textSize = value
-            invalidate()
-        }
-
-    /**
-     * Сжатие букв по горизонтали.
-     * Меньше 1f = текст уже.
-     */
+    /** Горизонтальное сжатие букв: меньше 1f = уже. */
     var textScaleX: Float = 0.62f
         set(value) {
             field = value
@@ -60,12 +54,17 @@ class DisplayBoardView(context: Context) : View(context) {
             invalidate()
         }
 
-    /**
-     * Горизонтальный сдвиг текста вправо.
-     */
+    /** Сдвиг текста вправо относительно левого края View. */
     var textOffsetX: Float = 0f
         set(value) {
             field = value
+            invalidate()
+        }
+
+    var textSizePx: Float = 32f
+        set(value) {
+            field = value
+            paint.textSize = value
             invalidate()
         }
 
@@ -78,12 +77,16 @@ class DisplayBoardView(context: Context) : View(context) {
     private var currentText = ""
     private var previousText = ""
 
+    /** true — обычная смена, false — специальное стирание при выключении. */
+    private var clearMode = false
+
     private var animator: ValueAnimator? = null
     private var animProgress = 1f
 
     fun setTextInstant(text: String) {
         animator?.cancel()
         animator = null
+        clearMode = false
         currentText = text
         previousText = text
         animProgress = 1f
@@ -91,13 +94,10 @@ class DisplayBoardView(context: Context) : View(context) {
     }
 
     /**
-     * Смена текста с анимацией.
-     *
-     * Если предыдущая анимация ещё идёт, берём видимую на данный
-     * момент часть текста и начинаем новую анимацию от неё.
+     * Плавная смена надписи.
      */
     fun setTextAnimated(newText: String) {
-        if (newText == currentText && animator == null) {
+        if (newText == currentText && animator == null && !clearMode) {
             return
         }
 
@@ -105,47 +105,21 @@ class DisplayBoardView(context: Context) : View(context) {
 
         animator?.cancel()
         animator = null
+        clearMode = false
 
         previousText = visibleNow
         currentText = newText
         animProgress = 0f
 
-        animator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = REVEAL_DURATION_MS + ERASE_DURATION_MS
-            interpolator = LinearInterpolator()
-
-            addUpdateListener {
-                animProgress = it.animatedValue as Float
-                invalidate()
-            }
-
-            addListener(object : AnimatorListenerAdapter() {
-                override fun onAnimationEnd(animation: Animator) {
-                    if (animator === animation) {
-                        animator = null
-                        previousText = currentText
-                        animProgress = 1f
-                        invalidate()
-                    }
-                }
-
-                override fun onAnimationCancel(animation: Animator) {
-                    if (animator === animation) {
-                        animator = null
-                    }
-                }
-            })
-
-            start()
-        }
+        startAnimator(REVEAL_DURATION_MS + ERASE_DURATION_MS)
     }
 
     /**
-     * Выключение ЭМУ.
+     * Плавно выключает ЭМУ.
      *
-     * Текущая анимация отменяется, после чего стирается именно
-     * тот текст, который был реально виден в момент выключения.
-     * Поэтому старая целевая строка не дописывается мгновенно.
+     * Важный момент: при выключении сразу запускается ТОЛЬКО стирание.
+     * Поэтому если табло уже полностью отображает текст, оно не исчезает
+     * мгновенно и не ждёт фазу появления.
      */
     fun clearAnimated() {
         val visibleNow = getVisibleTextApprox()
@@ -154,16 +128,25 @@ class DisplayBoardView(context: Context) : View(context) {
         animator = null
 
         if (visibleNow.isEmpty()) {
-            setTextInstant("")
+            clearMode = false
+            currentText = ""
+            previousText = ""
+            animProgress = 1f
+            invalidate()
             return
         }
 
+        clearMode = true
         previousText = visibleNow
         currentText = ""
         animProgress = 0f
 
+        startAnimator(ERASE_DURATION_MS)
+    }
+
+    private fun startAnimator(durationMs: Long) {
         animator = ValueAnimator.ofFloat(0f, 1f).apply {
-            duration = ERASE_DURATION_MS
+            duration = durationMs
             interpolator = LinearInterpolator()
 
             addUpdateListener {
@@ -175,8 +158,12 @@ class DisplayBoardView(context: Context) : View(context) {
                 override fun onAnimationEnd(animation: Animator) {
                     if (animator === animation) {
                         animator = null
-                        previousText = ""
-                        currentText = ""
+                        if (clearMode) {
+                            previousText = ""
+                            currentText = ""
+                        } else {
+                            previousText = currentText
+                        }
                         animProgress = 1f
                         invalidate()
                     }
@@ -194,12 +181,20 @@ class DisplayBoardView(context: Context) : View(context) {
     }
 
     /**
-     * Получает приблизительно видимую строку в текущий момент.
-     * Нужна для корректной отмены анимации.
+     * Возвращает строку, приблизительно соответствующую тому, что реально
+     * видно на экране в текущий момент анимации.
      */
     private fun getVisibleTextApprox(): String {
         if (animator == null || animProgress >= 1f) {
             return currentText
+        }
+
+        if (clearMode) {
+            return previousText.take(
+                (previousText.length * (1f - animProgress))
+                    .coerceIn(0f, 1f)
+                    .let { (previousText.length * it).roundToInt() }
+            )
         }
 
         val total = (REVEAL_DURATION_MS + ERASE_DURATION_MS).toFloat()
@@ -224,24 +219,20 @@ class DisplayBoardView(context: Context) : View(context) {
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if (width == 0 || height == 0) {
-            return
-        }
+        if (width == 0 || height == 0) return
 
         val baseline =
-            height / 2f -
-                (paint.descent() + paint.ascent()) / 2f
-
+            height / 2f - (paint.descent() + paint.ascent()) / 2f
         val x = textOffsetX
 
+        // Обычное стабильное состояние.
         if (animProgress >= 1f || previousText == currentText) {
             canvas.drawText(currentText, x, baseline, paint)
             return
         }
 
-        // Отдельный режим выключения ЭМУ: currentText пустой,
-        // поэтому стираем предыдущую надпись сразу по шкале ERASE_DURATION_MS.
-        if (currentText.isEmpty() && previousText.isNotEmpty()) {
+        // Выключение ЭМУ: сразу стираем текущую видимую строку.
+        if (clearMode) {
             val eraseFraction = animProgress.coerceIn(0f, 1f)
             val oldWidth = paint.measureText(previousText)
             val eraseFromX = x + oldWidth * eraseFraction
@@ -265,12 +256,11 @@ class DisplayBoardView(context: Context) : View(context) {
         val newRevealFraction =
             (animProgress / revealEnd).coerceIn(0f, 1f)
 
-        // Старая надпись стирается быстрее.
+        // Старая стирается быстрее.
         val oldEraseFraction =
             ((animProgress - revealEnd) / (1f - revealEnd))
                 .coerceIn(0f, 1f)
 
-        // Сначала старая надпись.
         if (oldEraseFraction < 1f && previousText.isNotEmpty()) {
             val oldWidth = paint.measureText(previousText)
             val eraseFromX = x + oldWidth * oldEraseFraction
@@ -286,7 +276,6 @@ class DisplayBoardView(context: Context) : View(context) {
             canvas.restore()
         }
 
-        // Затем новая надпись.
         if (newRevealFraction > 0f && currentText.isNotEmpty()) {
             val newWidth = paint.measureText(currentText)
             val revealToX = x + newWidth * newRevealFraction

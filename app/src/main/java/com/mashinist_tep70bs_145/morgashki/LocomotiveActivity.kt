@@ -273,7 +273,7 @@ class LocomotiveActivity : AppCompatActivity() {
                 presetBtn.layoutParams = lp
                 presetBtn.setOnClickListener {
                     input.setText(route)
-                    input.setSelection(route.length)
+                    input.setSelection(input.text.length)
                 }
                 presetsRow.addView(presetBtn)
             }
@@ -343,8 +343,7 @@ class LocomotiveActivity : AppCompatActivity() {
         val boardView = DisplayBoardView(this).apply {
             typeface = emuTypeface
             textColor = resources.getColor(R.color.display_board_text, theme)
-            textSizePx = heightPx * 0.62f
-            background = AppCompatResources.getDrawable(context, R.drawable.bg_display_board)
+            textSizePx = heightPx * 0.48f
             setPadding((widthPx * 0.06f).roundToInt(), 0, 0, 0)
             setTextInstant("") // табло погашено при входе на экран
         }
