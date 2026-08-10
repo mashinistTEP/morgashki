@@ -254,30 +254,66 @@ class LocomotiveActivity : AppCompatActivity() {
         // кнопки готовых маршрутов сверху (специфичны для конкретного МВПС,
         // задаются в locomotive.displayBoard.presetRoutes, не глобально)
         if (board.presetRoutes.isNotEmpty()) {
-            val presetsRow = LinearLayout(this).apply {
-                orientation = LinearLayout.HORIZONTAL
-            }
-            for ((index, route) in board.presetRoutes.withIndex()) {
-                val presetBtn = TextView(this).apply {
-                    text = route
-                    gravity = Gravity.CENTER
-                    isFocusable = true
-                    isClickable = true
-                    background = AppCompatResources.getDrawable(context, R.drawable.bg_toggle_button)
-                    setTextColor(getColorStateList(R.color.toggle_text_selector))
-                    textSize = 13f
-                    setPadding((8 * density).toInt(), (10 * density).toInt(), (8 * density).toInt(), (10 * density).toInt())
+            // Заготовки идут вертикально, по две кнопки в каждом ряду.
+            // Так длинные названия маршрутов не сжимаются в один длинный горизонтальный ряд.
+            val rows = board.presetRoutes.chunked(2)
+
+            for ((rowIndex, rowRoutes) in rows.withIndex()) {
+                val presetsRow = LinearLayout(this).apply {
+                    orientation = LinearLayout.HORIZONTAL
                 }
-                val lp = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-                if (index > 0) lp.marginStart = (8 * density).toInt()
-                presetBtn.layoutParams = lp
-                presetBtn.setOnClickListener {
-                    input.setText(route)
-                    input.setSelection(input.text.length)
+
+                for ((columnIndex, route) in rowRoutes.withIndex()) {
+                    val presetBtn = TextView(this).apply {
+                        text = route
+                        gravity = Gravity.CENTER
+                        isFocusable = true
+                        isClickable = true
+                        background = AppCompatResources.getDrawable(context, R.drawable.bg_toggle_button)
+                        setTextColor(getColorStateList(R.color.toggle_text_selector))
+                        textSize = 13f
+                        setPadding(
+                            (8 * density).toInt(),
+                            (10 * density).toInt(),
+                            (8 * density).toInt(),
+                            (10 * density).toInt()
+                        )
+                        minHeight = (52 * density).toInt()
+                    }
+
+                    val lp = LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+
+                    if (columnIndex > 0) {
+                        lp.marginStart = (8 * density).toInt()
+                    }
+
+                    // Если в последнем ряду осталась одна заготовка,
+                    // оставляем ей половину ширины, как у остальных кнопок.
+                    presetBtn.layoutParams = lp
+
+                    presetBtn.setOnClickListener {
+                        input.setText(route)
+                        input.setSelection(input.text.length)
+                    }
+
+                    presetsRow.addView(presetBtn)
                 }
-                presetsRow.addView(presetBtn)
+
+                container.addView(presetsRow)
+
+                if (rowIndex < rows.lastIndex) {
+                    val rowSpacer = View(this)
+                    rowSpacer.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        (8 * density).toInt()
+                    )
+                    container.addView(rowSpacer)
+                }
             }
-            container.addView(presetsRow)
 
             val spacer = View(this)
             spacer.layoutParams = LinearLayout.LayoutParams(

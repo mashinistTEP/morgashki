@@ -659,6 +659,163 @@ object LocomotiveCatalog {
                     )
                 )
             )
+        ),
+
+        Locomotive(
+            code = "er2k_530",
+            displayName = "ЭР2К_530",
+            ownName = "Янтарный Берег",
+            fonRes = R.drawable.er2k_530_fon,
+            fonAspectRatio = 920f / 1152f,
+            group = RailwayGroup.RZD,
+            line = RailwayLine.KLD_ZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.er2k_530_bufer_r, LayerRect(26.771436f, 60.597071f, 4.840231f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.er2k_530_bufer_l, LayerRect(67.262418f, 60.569008f, 5.064358f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.er2k_530_red_bufer_r, LayerRect(20.695465f, 60.554429f, 5.041824f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.er2k_530_red_bufer_l, LayerRect(73.143267f, 60.474763f, 5.101431f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.er2k_530_projector, LayerRect(45.146737f, 13.968323f, 9.016051f))
+                    )
+                )
+            ),
+            displayBoard = DisplayBoard(
+                rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
+                maxTextWidthPct = 29f,
+                maxChars = 22,
+                presetRoutes = listOf("Калининград-Юж.", "Светлогорск", "Пионерский Кур-т", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
+            )
+        ),
+
+        Locomotive(
+            code = "em2_018",
+            displayName = "ЭМ2-018",
+            fonRes = R.drawable.em2_018_fon,
+            fonAspectRatio = 920f / 1152f,
+            group = RailwayGroup.RZD,
+            line = RailwayLine.MZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2_018_bufer_r, LayerRect(26.771436f, 60.597071f, 4.840231f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2_018_bufer_l, LayerRect(67.262418f, 60.569008f, 5.064358f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2_018_red_bufer_r, LayerRect(20.695465f, 60.554429f, 5.041824f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2_018_red_bufer_l, LayerRect(73.143267f, 60.474763f, 5.101431f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2_018_projector, LayerRect(45.146737f, 13.968323f, 9.016051f))
+                    )
+                )
+            ),
+            displayBoard = DisplayBoard(
+                rect = LayerRect(xPct = 22.7174f, yPct = 15.191f, wPct = 20.2174f),
+                maxTextWidthPct = 19.0043f,
+                maxChars = 22,
+                presetRoutes = listOf("Москва", "Кашира", "Михнево", "Ожерелье", "Узуново", "Ступино", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
+            )
+        ),
+
+        Locomotive(
+            code = "em2i_016",
+            displayName = "ЭМ2И-016",
+            fonRes = R.drawable.em2i_016_fon,
+            fonAspectRatio = 1254f / 1254f,
+            group = RailwayGroup.RZD,
+            line = RailwayLine.MZD,
+            buttons = listOf(
+                ToggleButton(
+                    id = "bufer_r",
+                    labelRes = R.string.btn_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2i_016_bufer_r, LayerRect(30.252049f, 59.433258f, 4.583881f))
+                    )
+                ),
+                ToggleButton(
+                    id = "bufer_l",
+                    labelRes = R.string.btn_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2i_016_bufer_l, LayerRect(64.974911f, 59.690639f, 4.426825f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_r",
+                    labelRes = R.string.btn_red_bufer_r,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2i_016_red_bufer_r, LayerRect(26.453746f, 60.185300f, 3.452806f))
+                    )
+                ),
+                ToggleButton(
+                    id = "red_bufer_l",
+                    labelRes = R.string.btn_red_bufer_l,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2i_016_red_bufer_l, LayerRect(69.934010f, 60.144421f, 3.349241f))
+                    )
+                ),
+                ToggleButton(
+                    id = "projector",
+                    labelRes = R.string.btn_projector,
+                    layers = listOf(
+                        LayerAsset(R.drawable.em2i_016_projector, LayerRect(46.779773f, 48.727305f, 6.216300f))
+                    )
+                )
+            ),
+            displayBoard = DisplayBoard(
+                rect = LayerRect(xPct = 14.673f, yPct = 12.201f, wPct = 14.5933f),
+                maxTextWidthPct = 13.7177f,
+                maxChars = 30,
+                presetRoutes = listOf("Ожерелье", "Москва", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
+            )
         )
     )
 
