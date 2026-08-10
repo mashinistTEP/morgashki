@@ -570,14 +570,18 @@ def main():
             max_chars = int(ask("Максимальное число символов на табло", default="12"))
 
             presets = []
-            print("Введи готовые маршруты для кнопок в диалоге ввода (свои для этого МВПС).")
-            print("Оставь пустую строку, чтобы закончить список.")
-            while True:
-                route = input(f"  Маршрут {len(presets) + 1} (или Enter чтобы закончить): ").strip()
-                if not route:
-                    break
-                presets.append(route)
-                if len(presets) >= 2:
+            has_presets = ask_yes_no(
+                "Добавить готовые маршруты-кнопки в диалог ввода? (необязательно, можно пропустить)",
+                default_yes=False
+            )
+            if has_presets:
+                print("Введи готовые маршруты (свои для этого МВПС, не глобальные).")
+                print("Оставь пустую строку, чтобы закончить список.")
+                while True:
+                    route = input(f"  Маршрут {len(presets) + 1} (или Enter чтобы закончить): ").strip()
+                    if not route:
+                        break
+                    presets.append(route)
                     more = ask_yes_no("Добавить ещё один маршрут?", default_yes=False)
                     if not more:
                         break

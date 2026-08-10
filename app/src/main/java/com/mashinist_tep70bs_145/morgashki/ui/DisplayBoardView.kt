@@ -239,6 +239,25 @@ class DisplayBoardView(context: Context) : View(context) {
             return
         }
 
+        // Отдельный режим выключения ЭМУ: currentText пустой,
+        // поэтому стираем предыдущую надпись сразу по шкале ERASE_DURATION_MS.
+        if (currentText.isEmpty() && previousText.isNotEmpty()) {
+            val eraseFraction = animProgress.coerceIn(0f, 1f)
+            val oldWidth = paint.measureText(previousText)
+            val eraseFromX = x + oldWidth * eraseFraction
+
+            canvas.save()
+            canvas.clipRect(
+                eraseFromX,
+                0f,
+                width.toFloat(),
+                height.toFloat()
+            )
+            canvas.drawText(previousText, x, baseline, paint)
+            canvas.restore()
+            return
+        }
+
         val total = (REVEAL_DURATION_MS + ERASE_DURATION_MS).toFloat()
         val revealEnd = REVEAL_DURATION_MS / total
 
