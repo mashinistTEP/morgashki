@@ -559,11 +559,10 @@ object LocomotiveCatalog {
                     )
                 )
             ),
-            // Координаты откалиброваны точно по er2k_428_fon.png (612x766):
-            // окно табло x=200..390, y=170..212 px.
+            
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
-                maxTextWidthPct = 35f,
+                maxTextWidthPct = 40f,
                 maxChars = 22,
                 presetRoutes = listOf("Светлогорск", "Калининград-Юж.", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
@@ -708,10 +707,10 @@ object LocomotiveCatalog {
             ),
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
-                maxTextWidthPct = 23.6109f,
+                maxTextWidthPct = 43.6109f,
                 maxChars = 22,
                 heightToWidthRatio = 0.1882f,
-                textOffsetXRatio = 0.05f,
+                textOffsetXRatio = 0.06f,
                 textSizeRatio = 0.55f,
                 presetRoutes = listOf("Калининград-Юж.", "Светлогорск", "Пионерскский Кур-т", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
@@ -763,10 +762,10 @@ object LocomotiveCatalog {
             ),
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
-                maxTextWidthPct = 23.6109f,
+                maxTextWidthPct = 40.6109f,
                 maxChars = 22,
                 heightToWidthRatio = 0.1882f,
-                textOffsetXRatio = 0.05f,
+                textOffsetXRatio = 0.06f,
                 textSizeRatio = 0.55f,
                 presetRoutes = listOf("Москва", "Кашира", "Михнево", "Ожерелье", "Узуново", "Ступино", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
@@ -818,7 +817,7 @@ object LocomotiveCatalog {
             ),
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 31.26f, yPct = 22.488f, wPct = 36.9219f),
-                maxTextWidthPct = 38.8142f,
+                maxTextWidthPct = 43.8142f,
                 maxChars = 30,
                 heightToWidthRatio = 0.1382f,
                 textOffsetXRatio = 0.06f,
