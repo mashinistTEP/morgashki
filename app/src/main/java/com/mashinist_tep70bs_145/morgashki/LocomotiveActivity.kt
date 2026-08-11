@@ -373,14 +373,16 @@ class LocomotiveActivity : AppCompatActivity() {
         if (holderW == 0 || holderH == 0) return
 
         val widthPx = (holderW * board.rect.wPct / 100f).roundToInt()
-        // реальное соотношение высоты к ширине окна табло (откалибровано по фото)
-        val heightPx = (widthPx * 0.221f).roundToInt()
+        // соотношение высоты к ширине окна табло — индивидуальное для
+        // каждого локомотива (задаётся в DisplayBoard, а не общей константой)
+        val heightPx = (widthPx * board.heightToWidthRatio).roundToInt()
 
         val boardView = DisplayBoardView(this).apply {
             typeface = emuTypeface
             textColor = resources.getColor(R.color.display_board_text, theme)
-            textSizePx = heightPx * 0.48f
-            setPadding((widthPx * 0.06f).roundToInt(), 0, 0, 0)
+            textSizePx = heightPx * board.textSizeRatio
+            setPadding((widthPx * board.textOffsetXRatio).roundToInt(), 0, 0, 0)
+            textOffsetX = widthPx * board.textOffsetXRatio
             setTextInstant("") // табло погашено при входе на экран
         }
 

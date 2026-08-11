@@ -563,7 +563,7 @@ object LocomotiveCatalog {
             // окно табло x=200..390, y=170..212 px.
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
-                maxTextWidthPct = 29f,
+                maxTextWidthPct = 31f,
                 maxChars = 22,
                 presetRoutes = listOf("Светлогорск", "Калининград-Юж.", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
@@ -663,7 +663,7 @@ object LocomotiveCatalog {
 
         Locomotive(
             code = "er2k_530",
-            displayName = "ЭР2К_530",
+            displayName = "ЭР2К-530",
             ownName = "Янтарный Берег",
             fonRes = R.drawable.er2k_530_fon,
             fonAspectRatio = 920f / 1152f,
@@ -707,10 +707,13 @@ object LocomotiveCatalog {
                 )
             ),
             displayBoard = DisplayBoard(
-                rect = LayerRect(xPct = 32.6797f, yPct = 22.1932f, wPct = 31.0458f),
-                maxTextWidthPct = 29f,
+                rect = LayerRect(xPct = 22.7174f, yPct = 15.191f, wPct = 20.2174f),
+                maxTextWidthPct = 19.6109f,
                 maxChars = 22,
-                presetRoutes = listOf("Калининград-Юж.", "Светлогорск", "Пионерский Кур-т", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
+                heightToWidthRatio = 0.1882f,
+                textOffsetXRatio = 0.05f,
+                textSizeRatio = 0.55f,
+                presetRoutes = listOf("Калининград-Юж.", "Светлогорск", "Пионерскский Кур-т", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
         ),
 
@@ -760,8 +763,11 @@ object LocomotiveCatalog {
             ),
             displayBoard = DisplayBoard(
                 rect = LayerRect(xPct = 22.7174f, yPct = 15.191f, wPct = 20.2174f),
-                maxTextWidthPct = 19.0043f,
+                maxTextWidthPct = 19.6109f,
                 maxChars = 22,
+                heightToWidthRatio = 0.1882f,
+                textOffsetXRatio = 0.05f,
+                textSizeRatio = 0.55f,
                 presetRoutes = listOf("Москва", "Кашира", "Михнево", "Ожерелье", "Узуново", "Ступино", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
         ),
@@ -811,9 +817,12 @@ object LocomotiveCatalog {
                 )
             ),
             displayBoard = DisplayBoard(
-                rect = LayerRect(xPct = 14.673f, yPct = 12.201f, wPct = 14.5933f),
-                maxTextWidthPct = 13.7177f,
+                rect = LayerRect(xPct = 31.26f, yPct = 22.488f, wPct = 36.9219f),
+                maxTextWidthPct = 35.8142f,
                 maxChars = 30,
+                heightToWidthRatio = 0.1382f,
+                textOffsetXRatio = 0.06f,
+                textSizeRatio = 0.55f,
                 presetRoutes = listOf("Ожерелье", "Москва", "Нет Посадки", "В Депо", "Испытания", "Обкатка")
             )
         )

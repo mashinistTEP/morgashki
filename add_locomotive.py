@@ -260,6 +260,9 @@ def build_locomotive_block(code, display_name, own_name, group_const,
         )
         lines.append(f"{indent}        maxTextWidthPct = {d['maxTextWidthPct']}f,")
         lines.append(f"{indent}        maxChars = {d['maxChars']},")
+        lines.append(f"{indent}        heightToWidthRatio = {d['heightToWidthRatio']}f,")
+        lines.append(f"{indent}        textOffsetXRatio = {d['textOffsetXRatio']}f,")
+        lines.append(f"{indent}        textSizeRatio = {d['textSizeRatio']}f,")
         lines.append(f"{indent}        presetRoutes = listOf({presets_kt})")
         lines.append(f"{indent}    )")
 
@@ -552,20 +555,46 @@ def main():
             fon_w, fon_h = fon_aspect_ratio
             print()
             print("Координаты окна табло вводятся в пикселях исходного файла фона")
-            print(f"(размер фона: {fon_w} x {fon_h} px). Проще всего определить их,")
-            print("открыв фон в любом просмотрщике с линейкой/координатами курсора,")
-            print("или через скрипт с сеткой (спроси, если нужно).")
+            print(f"(размер фона: {fon_w} x {fon_h} px). Проще всего определить их через")
+            print("board_calibrator.html (положи его в папку calibrator/ рядом с index.html —")
+            print("он использует те же ассеты) или через find_display_board_coords.py.")
             x1 = int(ask("Левая граница окна табло, x1 (px)"))
             y1 = int(ask("Верхняя граница окна табло, y1 (px)"))
             x2 = int(ask("Правая граница окна табло, x2 (px)"))
             y2 = int(ask("Нижняя граница окна табло, y2 (px)"))
 
+            board_width_px = x2 - x1
+            board_height_px = y2 - y1
+            if board_width_px <= 0 or board_height_px <= 0:
+                print("ОШИБКА: x2 должен быть больше x1, а y2 больше y1.")
+                sys.exit(1)
+
             board_x_pct = x1 / fon_w * 100
             board_y_pct = y1 / fon_h * 100
-            board_w_pct = (x2 - x1) / fon_w * 100
-            # запас по ширине текста — несколько процентов меньше самого окна,
-            # чтобы текст не упирался вплотную в рамку табло
-            max_text_width_pct = board_w_pct * 0.94
+            board_w_pct = board_width_px / fon_w * 100
+            # реальное соотношение высоты к ширине окна табло — считается из
+            # введённых x1/y1/x2/y2, а не берётся одинаковым для всех МВПС
+            height_to_width_ratio = board_height_px / board_width_px
+
+            print(f"\nОкно табло: {board_width_px}x{board_height_px} px, "
+                  f"соотношение высота/ширина = {height_to_width_ratio:.4f}")
+
+            text_offset_x_ratio = float(ask(
+                "Отступ текста от левого края табло, в % от ширины окна",
+                default="6"
+            )) / 100
+
+            text_size_ratio = float(ask(
+                "Размер текста, в % от высоты окна табло",
+                default="48"
+            )) / 100
+
+            max_text_width_pct_input = ask(
+                "Максимальная ширина текста, в % от ширины ОКНА табло "
+                "(при превышении текст не поместится и не применится)",
+                default="94"
+            )
+            max_text_width_pct = board_w_pct * (float(max_text_width_pct_input) / 100)
 
             max_chars = int(ask("Максимальное число символов на табло", default="12"))
 
@@ -592,12 +621,16 @@ def main():
                 "wPct": round(board_w_pct, 4),
                 "maxTextWidthPct": round(max_text_width_pct, 4),
                 "maxChars": max_chars,
+                "heightToWidthRatio": round(height_to_width_ratio, 4),
+                "textOffsetXRatio": round(text_offset_x_ratio, 4),
+                "textSizeRatio": round(text_size_ratio, 4),
                 "presetRoutes": presets,
             }
 
             print()
             print(f"Табло: x={display_board_data['xPct']}% y={display_board_data['yPct']}% "
-                  f"w={display_board_data['wPct']}%, маршруты: {presets}")
+                  f"w={display_board_data['wPct']}% h/w={display_board_data['heightToWidthRatio']}, "
+                  f"маршруты: {presets}")
 
         print()
         raw_json = ask_multiline_json("Теперь вставь блок координат из калибратора:")
