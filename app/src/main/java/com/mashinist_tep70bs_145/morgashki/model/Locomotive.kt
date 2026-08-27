@@ -60,7 +60,7 @@ data class ToggleButton(
 data class DisplayBoard(
     val rect: LayerRect,
     val maxTextWidthPct: Float,
-    val maxChars: Int = 17,
+    val maxChars: Int,
     val heightToWidthRatio: Float = 0.221f,
     val textOffsetXRatio: Float = 0.06f,
     val textSizeRatio: Float = 0.48f,
