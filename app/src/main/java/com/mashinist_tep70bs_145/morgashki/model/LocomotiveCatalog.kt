@@ -20,7 +20,7 @@ object LocomotiveCatalog {
             displayName = "БКГ1-010",
             fonRes = R.drawable.bkg1_fon,
             fonAspectRatio = 864f / 1233f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -68,7 +68,7 @@ object LocomotiveCatalog {
             ownName = "АЛЕКСАНДР ЛАДУТЬКО",
             fonRes = R.drawable.chs4t_fon,
             fonAspectRatio = 912f / 1169f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -113,7 +113,7 @@ object LocomotiveCatalog {
             displayName = "ТЭП70-0212",
             fonRes = R.drawable.tep70_fon,
             fonAspectRatio = 864f / 1226f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -176,7 +176,7 @@ object LocomotiveCatalog {
             displayName = "ДР1А-269",
             fonRes = R.drawable.dr1a_fon,
             fonAspectRatio = 864f / 1226f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -221,6 +221,7 @@ object LocomotiveCatalog {
             displayName = "ТЭП70БС-145",
             fonRes = R.drawable.tep70bs_145_fon,
             fonAspectRatio = 675f / 832f,
+            glowKind = "white",
             group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
@@ -267,7 +268,7 @@ object LocomotiveCatalog {
             ownName = "ЕВГЕНИЙ ВОЛОДЬКО",
             fonRes = R.drawable.er9tm_fon,
             fonAspectRatio = 628f / 816f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -312,7 +313,7 @@ object LocomotiveCatalog {
             displayName = "БКГ2-002",
             fonRes = R.drawable.bkg2_fon,
             fonAspectRatio = 864f / 1233f,
-            group = RailwayGroup.BCH,
+                        group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -360,7 +361,7 @@ object LocomotiveCatalog {
             displayName = "ЭП2К-220",
             fonRes = R.drawable.ep2k_fon,
             fonAspectRatio = 896f / 1167f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -405,7 +406,7 @@ object LocomotiveCatalog {
             displayName = "ЭС1П-013",
             fonRes = R.drawable.es1p_fon,
             fonAspectRatio = 652f / 745f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -429,7 +430,7 @@ object LocomotiveCatalog {
             displayName = "ЧС4т-313",
             fonRes = R.drawable.chs4t_313_rzd_fon,
             fonAspectRatio = 1171f / 1343f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -474,7 +475,7 @@ object LocomotiveCatalog {
             displayName = "ЭП1М-397",
             fonRes = R.drawable.ep1m_fon,
             fonAspectRatio = 848f / 1231f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
@@ -574,7 +575,7 @@ object LocomotiveCatalog {
             displayName = "ТГМ4а-1687",
             fonRes = R.drawable.tgm4a_1687_fon,
             fonAspectRatio = 672f / 768f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             line = RailwayLine.MZD,
             buttons = listOf(
                 ToggleButton(
@@ -620,7 +621,7 @@ object LocomotiveCatalog {
             displayName = "ТГМ4б-0824",
             fonRes = R.drawable.tgm4b_0824_fon,
             fonAspectRatio = 665f / 768f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             line = RailwayLine.MZD,
             buttons = listOf(
                 ToggleButton(
@@ -667,7 +668,7 @@ object LocomotiveCatalog {
             ownName = "Янтарный Берег",
             fonRes = R.drawable.er2k_530_fon,
             fonAspectRatio = 920f / 1152f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             line = RailwayLine.KLD_ZD,
             buttons = listOf(
                 ToggleButton(
@@ -722,7 +723,7 @@ object LocomotiveCatalog {
             displayName = "ЭМ2-018",
             fonRes = R.drawable.em2_018_fon,
             fonAspectRatio = 920f / 1152f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             line = RailwayLine.MZD,
             buttons = listOf(
                 ToggleButton(
@@ -777,7 +778,7 @@ object LocomotiveCatalog {
             displayName = "ЭМ2И-016",
             fonRes = R.drawable.em2i_016_fon,
             fonAspectRatio = 1254f / 1254f,
-            group = RailwayGroup.RZD,
+                        group = RailwayGroup.RZD,
             line = RailwayLine.MZD,
             buttons = listOf(
                 ToggleButton(

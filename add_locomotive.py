@@ -207,7 +207,7 @@ def build_toggle_button(button_id, label_res, drawable_layers, indent="         
 def build_locomotive_block(code, display_name, own_name, group_const,
                             has_fon, fon_aspect_ratio,
                             buttons_data, on_route=False, line_const=None,
-                            display_board_data=None):
+                            display_board_data=None, glow_kind=None):
     """
     buttons_data: список кортежей (button_id, label_res, [(drawable_name, layer), ...])
     в нужном порядке вывода.
@@ -225,6 +225,8 @@ def build_locomotive_block(code, display_name, own_name, group_const,
         lines.append(f"{indent}    fonAspectRatio = {fon_aspect_ratio[0]}f / {fon_aspect_ratio[1]}f,")
     else:
         lines.append(f"{indent}    fonRes = null,")
+    if glow_kind:
+        lines.append(f"{indent}    glowKind = \"{glow_kind}\",")
     lines.append(f"{indent}    group = RailwayGroup.{group_const},")
     if line_const:
         lines.append(f"{indent}    line = RailwayLine.{line_const},")
@@ -526,6 +528,19 @@ def main():
         )
 
         print()
+        print("Реальное свечение буферов: включённые буфера получают реалистичную")
+        print("линзу, яркое ядро и ореол, управляемый ползунком «сила свечения».")
+        glow_answer = ask(
+            "Тип реального свечения: 1) жёлтое  2) белое  3) без свечения",
+            default="3"
+        )
+        glow_kind = {"1": "yellow", "2": "white"}.get(glow_answer)
+        if glow_kind:
+            print(f'  → glowKind = "{glow_kind}" (красные буферы станут реалистичными автоматически)')
+        else:
+            print("  → без реального свечения: обычные плоские спрайты буферов")
+
+        print()
         required, missing = check_required_files(code, has_red_buffers, has_projector, projector_separate, has_fon)
         print("Ожидаемые файлы в drawable-nodpi:")
         for fname in required:
@@ -670,6 +685,7 @@ def main():
         code=code,
         display_name=display_name,
         own_name=own_name,
+        glow_kind=glow_kind if not on_route else None,
         group_const=group_const,
         has_fon=has_fon if not on_route else False,
         fon_aspect_ratio=fon_aspect_ratio,

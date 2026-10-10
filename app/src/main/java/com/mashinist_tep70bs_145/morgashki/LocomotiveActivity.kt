@@ -46,7 +46,9 @@ class LocomotiveActivity : AppCompatActivity() {
     private val layerViewsByButton = mutableMapOf<String, List<ImageView>>()
     // id кнопки -> ImageView реалистичных буферов (если у локомотива glowKind != null)
     private val realViewsByButton = mutableMapOf<String, List<ImageView>>()
-    // id кнопки -> ImageView ореолов свечения (если у локомотива glowKind != null)
+    // id кнопки -> ImageView фиксированного ядра свечения (не зависит от ползунка)
+    private val coreViewsByButton = mutableMapOf<String, List<ImageView>>()
+    // id кнопки -> ImageView ореолов свечения (сила и дальность от ползунка)
     private val glowViewsByButton = mutableMapOf<String, List<ImageView>>()
     // id кнопки -> включена ли сейчас (для пересчёта альфы ореолов)
     private val buttonChecked = mutableMapOf<String, Boolean>()
@@ -286,9 +288,14 @@ class LocomotiveActivity : AppCompatActivity() {
                     if (!fromUser) return
                     glowIntensity = progress / 100f
                     prefs.edit().putInt(KEY_GLOW, progress).apply()
+                    val hs = haloScale()
                     for ((id, glows) in glowViewsByButton) {
                         if (buttonChecked[id] == true) {
-                            glows.forEach { it.alpha = glowIntensity }
+                            glows.forEach {
+                                it.alpha = glowIntensity
+                                it.scaleX = hs
+                                it.scaleY = hs
+                            }
                         }
                     }
                 }
@@ -506,7 +513,18 @@ class LocomotiveActivity : AppCompatActivity() {
                     locomotive.glowKind == "white" -> if (isLeft) R.drawable.real_white_bufer_l else R.drawable.real_white_bufer_r
                     else -> if (isLeft) R.drawable.real_bufer_l else R.drawable.real_bufer_r
                 }
+                val coreRes = when {
+                    isRed -> R.drawable.real_red_bufer_core
+                    locomotive.glowKind == "white" -> R.drawable.real_white_bufer_core
+                    else -> R.drawable.real_bufer_core
+                }
+                val haloRes = when {
+                    isRed -> R.drawable.real_red_bufer_halo
+                    locomotive.glowKind == "white" -> R.drawable.real_white_bufer_halo
+                    else -> R.drawable.real_bufer_halo
+                }
                 val reals = mutableListOf<ImageView>()
+                val cores = mutableListOf<ImageView>()
                 val glows = mutableListOf<ImageView>()
                 for (layerAsset in button.layers) {
                     val widthPx = (holderW * layerAsset.rect.wPct / 100f).roundToInt()
@@ -530,22 +548,36 @@ class LocomotiveActivity : AppCompatActivity() {
                     })
                     reals += riv
 
-                    val giv = ImageView(this).apply {
-                        setImageResource(realRes)
+                    val side = (widthPx * GLOW_SCALE).roundToInt()
+                    val cx = leftPx + widthPx / 2f
+                    val cy = topPx + heightPx / 2f
+                    val bigLp = { FrameLayout.LayoutParams(side, side, Gravity.TOP or Gravity.START).apply {
+                        leftMargin = (cx - side / 2f).roundToInt()
+                        topMargin = (cy - side / 2f).roundToInt()
+                    } }
+
+                    // ядро свечения: яркость фиксированная, от ползунка не зависит
+                    val civ = ImageView(this).apply {
+                        setImageResource(coreRes)
                         scaleType = ImageView.ScaleType.FIT_XY
                         alpha = 0f
                         visibility = View.INVISIBLE
                     }
-                    val side = (widthPx * GLOW_SCALE).roundToInt()
-                    val cx = leftPx + widthPx / 2f
-                    val cy = topPx + heightPx / 2f
-                    fonHolder.addView(giv, FrameLayout.LayoutParams(side, side, Gravity.TOP or Gravity.START).apply {
-                        leftMargin = (cx - side / 2f).roundToInt()
-                        topMargin = (cy - side / 2f).roundToInt()
-                    })
+                    fonHolder.addView(civ, bigLp())
+                    cores += civ
+
+                    // ореол: сила (альфа) и дальность (масштаб) от ползунка
+                    val giv = ImageView(this).apply {
+                        setImageResource(haloRes)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 0f
+                        visibility = View.INVISIBLE
+                    }
+                    fonHolder.addView(giv, bigLp())
                     glows += giv
                 }
                 realViewsByButton[button.id] = reals
+                coreViewsByButton[button.id] = cores
                 glowViewsByButton[button.id] = glows
             }
         }
@@ -555,13 +587,24 @@ class LocomotiveActivity : AppCompatActivity() {
         buttonChecked[buttonId] = visible
         val views = layerViewsByButton[buttonId] ?: return
         val reals = realViewsByButton[buttonId].orEmpty()
+        val cores = coreViewsByButton[buttonId].orEmpty()
         val glows = glowViewsByButton[buttonId].orEmpty()
-        // если у кнопки есть реалистичные спрайты — плоский виден только в выключенном состоянии
-        val flatOn = if (reals.isEmpty()) visible else !visible
+        // плоский спрайт у ПС со свечением не показывается вовсе:
+        // выключенная лампа уже нарисована на фоне, включённая = линза + ядро + ореол
+        val flatOn = visible && reals.isEmpty()
         for (v in views) fadeView(v, flatOn, 1f)
         for (rv in reals) fadeView(rv, visible, 1f)
-        for (gv in glows) fadeView(gv, visible, glowIntensity)
+        for (cv in cores) fadeView(cv, visible, 1f)
+        val hs = haloScale()
+        for (gv in glows) {
+            gv.scaleX = hs
+            gv.scaleY = hs
+            fadeView(gv, visible, glowIntensity)
+        }
     }
+
+    // дальность ореола: от 60% размера при нулевой силе до полного на максимуме
+    private fun haloScale() = 0.6f + 0.4f * glowIntensity
 
     private fun fadeView(v: View, show: Boolean, targetAlpha: Float) {
         v.animate().cancel()
