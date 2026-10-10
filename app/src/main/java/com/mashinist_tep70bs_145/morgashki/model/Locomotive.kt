@@ -78,7 +78,7 @@ data class Locomotive(
     val group: RailwayGroup,
     val line: RailwayLine? = null, // конкретная дорога внутри компании (МЖД, ОКТ.ЖД...); null = общий состав группы
     val displayBoard: DisplayBoard? = null, // табло с вводом своего текста; null = у локомотива нет табло
-    val glowKind: String? = null // свечение буферных огней: "yellow"|"white"; null = функция выключена
+    val glowKind: String? = null, // свечение буферных огней: "yellow"|"white"; null = функция выключена
     val projectorGlow: String? = null // реалистичный прожектор: "yellow"|"white"; null = обычный спрайт
 )
 
