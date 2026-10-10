@@ -11,14 +11,29 @@ android {
         applicationId = "com.mashinist_tep70bs_145.morgashki"
         minSdk = 23
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 2
+        versionName = "1.1"
+    }
+
+    // один стабильный ключ подписи на все сборки: обновления APK встают
+    // поверх старой версии без удаления (ключ лежит в репозитории)
+    signingConfigs {
+        create("shared") {
+            storeFile = file("../keystore/morgashki.jks")
+            storePassword = "morgashki"
+            keyAlias = "morgashki"
+            keyPassword = "morgashki"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("shared")
         }
     }
 
