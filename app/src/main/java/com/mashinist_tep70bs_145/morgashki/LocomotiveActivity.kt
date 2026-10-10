@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -30,6 +31,11 @@ class LocomotiveActivity : AppCompatActivity() {
     companion object {
         const val EXTRA_CODE = "extra_locomotive_code"
         private const val FADE_DURATION_MS = 160L
+        // во сколько раз ореол свечения шире самой лампы
+        private const val GLOW_SCALE = 3.6f
+        private const val PREFS_NAME = "morgashki_prefs"
+        private const val KEY_GLOW = "glow_intensity"
+        private val GLOW_BUTTONS = setOf("bufer_l", "bufer_r", "red_bufer_l", "red_bufer_r")
     }
 
     private lateinit var locomotive: Locomotive
@@ -38,6 +44,13 @@ class LocomotiveActivity : AppCompatActivity() {
 
     // id кнопки -> список ImageView слоёв, которые она включает
     private val layerViewsByButton = mutableMapOf<String, List<ImageView>>()
+    // id кнопки -> ImageView реалистичных буферов (если у локомотива glowKind != null)
+    private val realViewsByButton = mutableMapOf<String, List<ImageView>>()
+    // id кнопки -> ImageView ореолов свечения (если у локомотива glowKind != null)
+    private val glowViewsByButton = mutableMapOf<String, List<ImageView>>()
+    // id кнопки -> включена ли сейчас (для пересчёта альфы ореолов)
+    private val buttonChecked = mutableMapOf<String, Boolean>()
+    private var glowIntensity = 1f
 
     private var displayBoardView: DisplayBoardView? = null
     private var emuTypeface: Typeface? = null
@@ -129,6 +142,10 @@ class LocomotiveActivity : AppCompatActivity() {
 
         if (locomotive.displayBoard != null) {
             panel.addView(buildDisplayBoardControlsRow())
+        }
+
+        if (locomotive.glowKind != null) {
+            panel.addView(buildGlowRow())
         }
     }
 
@@ -233,6 +250,53 @@ class LocomotiveActivity : AppCompatActivity() {
 
         row.addView(emuBtn)
         row.addView(boardBtn)
+        return row
+    }
+
+    /**
+     * Ряд «сила свечения»: подпись + ползунок 0..100. Значение сохраняется в
+     * SharedPreferences и применяется к ореолам включённых буферных огней.
+     */
+    private fun buildGlowRow(): LinearLayout {
+        val density = resources.displayMetrics.density
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        glowIntensity = prefs.getInt(KEY_GLOW, 100) / 100f
+
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = (12 * density).toInt() }
+        }
+
+        val label = TextView(this).apply {
+            text = getString(R.string.glow_intensity_label)
+            textSize = 12f
+            setTextColor(getColorStateList(R.color.toggle_text_selector))
+        }
+        row.addView(label, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+
+        val seek = SeekBar(this).apply {
+            max = 100
+            progress = (glowIntensity * 100).roundToInt()
+            setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seek: SeekBar?, progress: Int, fromUser: Boolean) {
+                    if (!fromUser) return
+                    glowIntensity = progress / 100f
+                    prefs.edit().putInt(KEY_GLOW, progress).apply()
+                    for ((id, glows) in glowViewsByButton) {
+                        if (buttonChecked[id] == true) {
+                            glows.forEach { it.alpha = glowIntensity }
+                        }
+                    }
+                }
+                override fun onStartTrackingTouch(seek: SeekBar?) = Unit
+                override fun onStopTrackingTouch(seek: SeekBar?) = Unit
+            })
+        }
+        row.addView(seek, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 2f))
         return row
     }
 
@@ -431,21 +495,83 @@ class LocomotiveActivity : AppCompatActivity() {
                 iv
             }
             layerViewsByButton[button.id] = views
+
+            // реалистичные буфера: при включённом огне плоский спрайт
+            // заменяется «реальным», поверх — ореол свечения в GLOW_SCALE раз шире лампы
+            if (locomotive.glowKind != null && GLOW_BUTTONS.contains(button.id)) {
+                val isRed = button.id.startsWith("red_bufer")
+                val isLeft = button.id.endsWith("_l")
+                val realRes = when {
+                    isRed -> if (isLeft) R.drawable.real_red_bufer_l else R.drawable.real_red_bufer_r
+                    locomotive.glowKind == "white" -> if (isLeft) R.drawable.real_white_bufer_l else R.drawable.real_white_bufer_r
+                    else -> if (isLeft) R.drawable.real_bufer_l else R.drawable.real_bufer_r
+                }
+                val reals = mutableListOf<ImageView>()
+                val glows = mutableListOf<ImageView>()
+                for (layerAsset in button.layers) {
+                    val widthPx = (holderW * layerAsset.rect.wPct / 100f).roundToInt()
+                    val drawable = AppCompatResources.getDrawable(this, layerAsset.drawableRes)
+                    val ratio = if (drawable != null && drawable.intrinsicWidth > 0) {
+                        drawable.intrinsicHeight.toFloat() / drawable.intrinsicWidth.toFloat()
+                    } else 1f
+                    val heightPx = (widthPx * ratio).roundToInt()
+                    val leftPx = (holderW * layerAsset.rect.xPct / 100f).roundToInt()
+                    val topPx = (holderH * layerAsset.rect.yPct / 100f).roundToInt()
+
+                    val riv = ImageView(this).apply {
+                        setImageResource(realRes)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 0f
+                        visibility = View.INVISIBLE
+                    }
+                    fonHolder.addView(riv, FrameLayout.LayoutParams(widthPx, heightPx, Gravity.TOP or Gravity.START).apply {
+                        leftMargin = leftPx
+                        topMargin = topPx
+                    })
+                    reals += riv
+
+                    val giv = ImageView(this).apply {
+                        setImageResource(realRes)
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        alpha = 0f
+                        visibility = View.INVISIBLE
+                    }
+                    val side = (widthPx * GLOW_SCALE).roundToInt()
+                    val cx = leftPx + widthPx / 2f
+                    val cy = topPx + heightPx / 2f
+                    fonHolder.addView(giv, FrameLayout.LayoutParams(side, side, Gravity.TOP or Gravity.START).apply {
+                        leftMargin = (cx - side / 2f).roundToInt()
+                        topMargin = (cy - side / 2f).roundToInt()
+                    })
+                    glows += giv
+                }
+                realViewsByButton[button.id] = reals
+                glowViewsByButton[button.id] = glows
+            }
         }
     }
 
     private fun setLayerVisible(buttonId: String, visible: Boolean) {
+        buttonChecked[buttonId] = visible
         val views = layerViewsByButton[buttonId] ?: return
-        for (v in views) {
-            v.animate().cancel()
-            if (visible) {
-                v.visibility = View.VISIBLE
-                v.animate().alpha(1f).setDuration(FADE_DURATION_MS).start()
-            } else {
-                v.animate().alpha(0f).setDuration(FADE_DURATION_MS)
-                    .withEndAction { v.visibility = View.INVISIBLE }
-                    .start()
-            }
+        val reals = realViewsByButton[buttonId].orEmpty()
+        val glows = glowViewsByButton[buttonId].orEmpty()
+        // если у кнопки есть реалистичные спрайты — плоский виден только в выключенном состоянии
+        val flatOn = if (reals.isEmpty()) visible else !visible
+        for (v in views) fadeView(v, flatOn, 1f)
+        for (rv in reals) fadeView(rv, visible, 1f)
+        for (gv in glows) fadeView(gv, visible, glowIntensity)
+    }
+
+    private fun fadeView(v: View, show: Boolean, targetAlpha: Float) {
+        v.animate().cancel()
+        if (show) {
+            v.visibility = View.VISIBLE
+            v.animate().alpha(targetAlpha).setDuration(FADE_DURATION_MS).start()
+        } else {
+            v.animate().alpha(0f).setDuration(FADE_DURATION_MS)
+                .withEndAction { v.visibility = View.INVISIBLE }
+                .start()
         }
     }
 }

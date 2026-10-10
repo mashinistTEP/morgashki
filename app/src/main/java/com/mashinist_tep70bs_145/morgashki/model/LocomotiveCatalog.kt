@@ -520,6 +520,7 @@ object LocomotiveCatalog {
             ownName = "Голубая Стрела",
             fonRes = R.drawable.er2k_428_fon,
             fonAspectRatio = 612f / 766f,
+            glowKind = "yellow",
             group = RailwayGroup.RZD,
             line = RailwayLine.KLD_ZD,
             buttons = listOf(
