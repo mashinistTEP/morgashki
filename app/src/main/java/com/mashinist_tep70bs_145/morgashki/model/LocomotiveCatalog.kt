@@ -20,34 +20,36 @@ object LocomotiveCatalog {
             displayName = "БКГ1-010",
             fonRes = R.drawable.bkg1_fon,
             fonAspectRatio = 864f / 1233f,
+            projectorGlow = "yellow",
+            glowKind = "yellow",
                         group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
                     labelRes = R.string.btn_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg1_bufer_r, LayerRect(25.372316f, 60.230854f, 6.177857f))
+                        LayerAsset(R.drawable.bkg1_bufer_r, LayerRect(16.658784f, 60.199498f, 6.162886f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_r",
                     labelRes = R.string.btn_red_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg1_red_bufer_r, LayerRect(16.658784f, 60.199498f, 6.162886f))
+                        LayerAsset(R.drawable.bkg1_red_bufer_r, LayerRect(25.372316f, 60.230854f, 6.177857f))
                     )
                 ),
                 ToggleButton(
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg1_bufer_l, LayerRect(68.377287f, 60.151261f, 6.225794f))
+                        LayerAsset(R.drawable.bkg1_bufer_l, LayerRect(77.071541f, 60.169871f, 6.238400f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_l",
                     labelRes = R.string.btn_red_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg1_red_bufer_l, LayerRect(77.071541f, 60.169871f, 6.238400f))
+                        LayerAsset(R.drawable.bkg1_red_bufer_l, LayerRect(68.377287f, 60.151261f, 6.225794f))
                     )
                 ),
                 // У БКГ1/БКГ2 два прожекторных фонаря включаются одним тумблером.
@@ -221,6 +223,7 @@ object LocomotiveCatalog {
             displayName = "ТЭП70БС-145",
             fonRes = R.drawable.tep70bs_145_fon,
             fonAspectRatio = 675f / 832f,
+            projectorGlow = "yellow",
             glowKind = "white",
             group = RailwayGroup.BCH,
             buttons = listOf(
@@ -313,34 +316,36 @@ object LocomotiveCatalog {
             displayName = "БКГ2-002",
             fonRes = R.drawable.bkg2_fon,
             fonAspectRatio = 864f / 1233f,
+            projectorGlow = "yellow",
+            glowKind = "yellow",
                         group = RailwayGroup.BCH,
             buttons = listOf(
                 ToggleButton(
                     id = "bufer_r",
                     labelRes = R.string.btn_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg2_bufer_r, LayerRect(25.372316f, 60.230854f, 6.177857f))
+                        LayerAsset(R.drawable.bkg2_bufer_r, LayerRect(16.658784f, 60.199498f, 6.162886f))
                     )
                 ),
                 ToggleButton(
                     id = "bufer_l",
                     labelRes = R.string.btn_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg2_bufer_l, LayerRect(68.377287f, 60.151262f, 6.225794f))
+                        LayerAsset(R.drawable.bkg2_bufer_l, LayerRect(77.071541f, 60.169871f, 6.238400f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_r",
                     labelRes = R.string.btn_red_bufer_r,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg2_red_bufer_r, LayerRect(16.658784f, 60.199498f, 6.162886f))
+                        LayerAsset(R.drawable.bkg2_red_bufer_r, LayerRect(25.372316f, 60.230854f, 6.177857f))
                     )
                 ),
                 ToggleButton(
                     id = "red_bufer_l",
                     labelRes = R.string.btn_red_bufer_l,
                     layers = listOf(
-                        LayerAsset(R.drawable.bkg2_red_bufer_l, LayerRect(77.071541f, 60.169871f, 6.238400f))
+                        LayerAsset(R.drawable.bkg2_red_bufer_l, LayerRect(68.377287f, 60.151262f, 6.225794f))
                     )
                 ),
                 ToggleButton(
@@ -521,6 +526,7 @@ object LocomotiveCatalog {
             ownName = "Голубая Стрела",
             fonRes = R.drawable.er2k_428_fon,
             fonAspectRatio = 612f / 766f,
+            projectorGlow = "white",
             glowKind = "yellow",
             group = RailwayGroup.RZD,
             line = RailwayLine.KLD_ZD,
@@ -668,6 +674,8 @@ object LocomotiveCatalog {
             ownName = "Янтарный Берег",
             fonRes = R.drawable.er2k_530_fon,
             fonAspectRatio = 920f / 1152f,
+            projectorGlow = "white",
+            glowKind = "yellow",
                         group = RailwayGroup.RZD,
             line = RailwayLine.KLD_ZD,
             buttons = listOf(

@@ -35,7 +35,7 @@ class LocomotiveActivity : AppCompatActivity() {
         private const val GLOW_SCALE = 3.6f
         private const val PREFS_NAME = "morgashki_prefs"
         private const val KEY_GLOW = "glow_intensity"
-        private val GLOW_BUTTONS = setOf("bufer_l", "bufer_r", "red_bufer_l", "red_bufer_r")
+        private val GLOW_BUTTONS = setOf("bufer_l", "bufer_r", "red_bufer_l", "red_bufer_r", "projector")
     }
 
     private lateinit var locomotive: Locomotive
@@ -505,21 +505,36 @@ class LocomotiveActivity : AppCompatActivity() {
 
             // реалистичные буфера: при включённом огне плоский спрайт
             // заменяется «реальным», поверх — ореол свечения в GLOW_SCALE раз шире лампы
-            if (locomotive.glowKind != null && GLOW_BUTTONS.contains(button.id)) {
+            val isProjectorBtn = button.id == "projector"
+            val glowActive = if (isProjectorBtn) locomotive.projectorGlow != null else locomotive.glowKind != null
+            if (glowActive && GLOW_BUTTONS.contains(button.id)) {
                 val isRed = button.id.startsWith("red_bufer")
                 val isLeft = button.id.endsWith("_l")
-                val realRes = when {
-                    isRed -> if (isLeft) R.drawable.real_red_bufer_l else R.drawable.real_red_bufer_r
-                    locomotive.glowKind == "white" -> if (isLeft) R.drawable.real_white_bufer_l else R.drawable.real_white_bufer_r
-                    else -> if (isLeft) R.drawable.real_bufer_l else R.drawable.real_bufer_r
+                // имя ресурса слоя: у раздельного прожектора сторона берётся из него
+                val layerName = { res: Int -> resources.getResourceEntryName(res) }
+                val realResFor = { res: Int ->
+                    val ln = layerName(res)
+                    when {
+                        isRed -> if (isLeft) R.drawable.real_red_bufer_l else R.drawable.real_red_bufer_r
+                        isProjectorBtn -> if (locomotive.projectorGlow == "white") R.drawable.real_white_projector
+                            else when {
+                                ln.endsWith("_projector_l") -> R.drawable.real_projector_l
+                                ln.endsWith("_projector_r") -> R.drawable.real_projector_r
+                                else -> R.drawable.real_projector
+                            }
+                        locomotive.glowKind == "white" -> if (isLeft) R.drawable.real_white_bufer_l else R.drawable.real_white_bufer_r
+                        else -> if (isLeft) R.drawable.real_bufer_l else R.drawable.real_bufer_r
+                    }
                 }
                 val coreRes = when {
                     isRed -> R.drawable.real_red_bufer_core
+                    isProjectorBtn -> if (locomotive.projectorGlow == "white") R.drawable.real_white_projector_core else R.drawable.real_projector_core
                     locomotive.glowKind == "white" -> R.drawable.real_white_bufer_core
                     else -> R.drawable.real_bufer_core
                 }
                 val haloRes = when {
                     isRed -> R.drawable.real_red_bufer_halo
+                    isProjectorBtn -> if (locomotive.projectorGlow == "white") R.drawable.real_white_projector_halo else R.drawable.real_projector_halo
                     locomotive.glowKind == "white" -> R.drawable.real_white_bufer_halo
                     else -> R.drawable.real_bufer_halo
                 }
@@ -537,7 +552,7 @@ class LocomotiveActivity : AppCompatActivity() {
                     val topPx = (holderH * layerAsset.rect.yPct / 100f).roundToInt()
 
                     val riv = ImageView(this).apply {
-                        setImageResource(realRes)
+                        setImageResource(realResFor(layerAsset.drawableRes))
                         scaleType = ImageView.ScaleType.FIT_XY
                         alpha = 0f
                         visibility = View.INVISIBLE
